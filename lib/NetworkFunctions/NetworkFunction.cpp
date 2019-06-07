@@ -8,6 +8,7 @@ bool loadConfiguration();
 
 void startNetwork()
 {
+ /*   todo : PBS removed for testing
   bool isConfigured = loadConfiguration();
 
   if (!isConfigured)
@@ -21,7 +22,7 @@ void startNetwork()
     Serial.print("IP address:\t");
     Serial.println(WiFi.softAPIP()); // Send the IP address of the ESP8266 to the computer
   }
-  else 
+  else  */
   {
     WiFi.begin(config.ssid, config.password);
     while(WiFi.status() != WL_CONNECTED)

@@ -15,11 +15,12 @@ unsigned long time_now = 0;
 int inputPin = 5;
 int outputPin = LED_BUILTIN;
 
-void configModeCallback (WiFiManager *myWiFiManager) {
-  Serial.println("Entered config mode");
-  Serial.println(WiFi.softAPIP());
-  //if you used auto generated SSID, print it
-  Serial.println(myWiFiManager->getConfigPortalSSID());
+void configModeCallback (WiFiManager *myWiFiManager) 
+{
+	Serial.println("Entered config mode");
+	Serial.println(WiFi.softAPIP());
+	//if you used auto generated SSID, print it
+	Serial.println(myWiFiManager->getConfigPortalSSID());
 }
 
 
@@ -33,33 +34,32 @@ void setup()
 	//WiFi.disconnect();         /*PBS : Enable if you want to reset Wifi data each time its flash */
 	//WiFi.softAPdisconnect();   /*PBS :Enable if you want to reset Wifi data each time its flash */
 
-  /* WiFiManager
-  Local intialization. Once its business is done, there is no need to keep it around */
-  WiFiManager wifiManager;
-  //reset settings - for testing
-  //wifiManager.resetSettings();
+	/* WiFiManager
+	Local intialization. Once its business is done, there is no need to keep it around */
+	WiFiManager wifiManager;
+	//reset settings - for testing
+	//wifiManager.resetSettings();
 
-  //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
-  wifiManager.setAPCallback(configModeCallback);
+	//set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
+	wifiManager.setAPCallback(configModeCallback);
 
-  //fetches ssid and pass and tries to connect
-  //if it does not connect it starts an access point with the specified name
-  //here  "AutoConnectAP"
-  //and goes into a blocking loop awaiting configuration
-  if(!wifiManager.autoConnect()) {
-    Serial.println("failed to connect and hit timeout");
-    //reset and try again, or maybe put it to deep sleep
-    ESP.reset();
-    delay(1000);
-  } 
+	//fetches ssid and pass and tries to connect
+	//if it does not connect it starts an access point with the specified name
+	//here  "AutoConnectAP"
+	//and goes into a blocking loop awaiting configuration
+	if(!wifiManager.autoConnect()) 
+	{
+    	Serial.println("failed to connect and hit timeout");
+    	//reset and try again, or maybe put it to deep sleep
+    	ESP.reset();
+    	delay(1000);
+	} 
 
-  //if you get here you have connected to the WiFi
-  Serial.println("You have connected to Wifi Router");
-
-	
+	//if you get here you have connected to the WiFi
+	Serial.println("You have connected to Wifi Router");
 
 	startSPIFFS();
-	//startNetwork();   /*PBS : Network connected using WifiManager */
+	startNetwork();   /*PBS : Network connected using WifiManager */
 	startWebServer();
 
 	Serial.println("Started Web Server");
