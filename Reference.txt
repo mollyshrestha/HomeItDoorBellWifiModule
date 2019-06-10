@@ -1,0 +1,2 @@
+Double Reset : https://github.com/datacute/DoubleResetDetector
+Timer : https://circuits4you.com/2018/01/02/esp8266-timer-ticker-example/

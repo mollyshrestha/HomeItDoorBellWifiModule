@@ -9,11 +9,33 @@
 #include <ESP8266WebServer.h>
 #include "WiFiManager.h"          //https://github.com/tzapu/WiFiManager
 
+#include <Ticker.h>  //Ticker Library
+
+#include "DoubleResetDetector.h"
+
+// Number of seconds after reset during which a 
+// subseqent reset will be considered a double reset.
+#define DRD_TIMEOUT 10
+
+// RTC Memory Address for the DoubleResetDetector to use
+#define DRD_ADDRESS 0
+
+DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
+
+Ticker timer;
+
+
 int period = 1000;
 unsigned long time_now = 0;
 
 int inputPin = 5;
 int outputPin = LED_BUILTIN;
+
+
+void timerforReset()
+{
+  digitalWrite(outputPin, !(digitalRead(outputPin)));  //Invert Current State of LED  
+}
 
 void configModeCallback (WiFiManager *myWiFiManager) 
 {
@@ -30,6 +52,18 @@ void setup()
 	pinMode(outputPin, OUTPUT);
 
 	Serial.begin(9600);
+
+	if (drd.detectDoubleReset()) \
+	{
+    	Serial.println("Double Reset Detected");
+  	} 
+	else 
+	{
+    	Serial.println("No Double Reset Detected");
+  	}
+
+	//Initialize Ticker every 0.5s
+    timer.attach(1, timerforReset); //Use <strong>attach_ms</strong> if you need time in ms
 
 	//WiFi.disconnect();         /*PBS : Enable if you want to reset Wifi data each time its flash */
 	//WiFi.softAPdisconnect();   /*PBS :Enable if you want to reset Wifi data each time its flash */
@@ -94,4 +128,10 @@ void loop()
 		digitalWrite(outputPin, HIGH);
 	}
 	WebServer.handleClient();
+
+	// Call the double reset detector loop method every so often,
+  	// so that it can recognise when the timeout expires.
+  	// You can also call drd.stop() when you wish to no longer
+  	// consider the next reset as a double reset.
+  	drd.loop();
 }
