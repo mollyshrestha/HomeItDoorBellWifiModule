@@ -1,3 +1,5 @@
+#include "common.h"
+#include "d1mini_pins_arduino.h"
 #include <ESP8266WiFi.h>
 #include "SpiffsFunctions.h"
 #include "WebServerFunctions.h"
@@ -9,11 +11,11 @@
 #include <ESP8266WebServer.h>
 #include "WiFiManager.h"          //https://github.com/tzapu/WiFiManager
 
-int period = 1000;
-unsigned long time_now = 0;
+#define period      (1000)
+static L4  time_now = 0;
 
-int inputPin = 5;
-int outputPin = LED_BUILTIN;
+#define inputPin  D1_MINI_PIN_D1
+int outputPin = D1_MINI_PIN_LED_BUILTIN;
 
 void configModeCallback (WiFiManager *myWiFiManager) 
 {
@@ -26,7 +28,7 @@ void configModeCallback (WiFiManager *myWiFiManager)
 
 void setup()
 {
-	pinMode(inputPin, INPUT);
+	pinMode((U1)inputPin, INPUT);
 	pinMode(outputPin, OUTPUT);
 
 	Serial.begin(9600);
@@ -94,4 +96,10 @@ void loop()
 		digitalWrite(outputPin, HIGH);
 	}
 	WebServer.handleClient();
+}
+
+/* Clear saved config after double Reset */
+void vd_s_ClearConfig(void)
+{
+	
 }
